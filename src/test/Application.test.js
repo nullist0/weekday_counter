@@ -1,21 +1,25 @@
 import { render, screen } from '@testing-library/react';
-import JestMock from 'jest-mock';
+import '@testing-library/jest-dom';
 import App from '../App';
 
 class ApplicationRunner {
-    constructor() {
-        const { getByText, queryAllByText } = render(<App/>);
+    constructor(date) {
+        this.today = date;
+
+        const { getByText, queryAllByText } = render(<App date={this.today}/>);
         this.getByText = getByText;
         this.queryAllByText = queryAllByText;
     }
 
     dateString = (date) => {
-        return `${date.getYear()}/${date.getMonth().toString().padEnd(2, '0')}/${date.getDay().toString().padEnd(2, '0')}`;
+        const year = date.getFullYear();
+        const month = date.getMonth().toString().padStart(2, '0');
+        const day = date.getDay().toString().padStart(2, '0');
+        return `${year}/${month}/${day}`;
     };
 
     showsToday = () => {
-        const date = Date.now();
-        expect(this.queryAllByText(this.dateString(date)).length).toBe(2);
+        expect(this.queryAllByText(this.dateString(this.today)).length).toBe(2);
     };
 
     showsResult = (result) => {
@@ -23,10 +27,10 @@ class ApplicationRunner {
     };
 }
 
-test('count one day if today is not a holiday.', () => {
-    Date.now = JestMock.fn(() => new Date(2021, 5, 11));
-    
-    const application = new ApplicationRunner();
+// first test
+test('count one day if today is not a holiday.', () => {   
+    const today = new Date(2021, 5, 11); 
+    const application = new ApplicationRunner(today);
     
     application.showsToday();
     application.showsResult(1);
