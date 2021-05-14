@@ -1,37 +1,39 @@
-function dateString(date) {
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  return `${year}/${month}/${day}`;
-};
+import React from 'react';
 
-function isSaturday(date) {
-    return date.getDay() === 6;
-};
+import { format } from './utils/date_formmatter';
+import { isWeekday } from './adapter/date_fetcher';
 
-function isSunday(date) {
-    return date.getDay() === 0;
-};
+class WeekdayCounter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state.date = props.date;
+  };
 
-export default function WeekdayCounter({
-    date
-}) {
-  // const key = 'WaaCrB9DoKTrcjXH0w1djKS%2BOpxkxJY1nJ799SzraTyAHiByYdzvy00j3m5sndXjKvkJMQrJwFtPY36LzpEZTg%3D%3D';
-  // const year = '2015';
-  // const month = '09';
-  // const url = `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=${key}&solYear=${year}&solMonth=${month}`;
+  state = {
+    date: new Date(),
+    count: 0
+  };
+  
+  componentDidMount() {
+    const setCount = async ({ date }) => {
+      const isHoliday = !(await isWeekday(date));
+      this.setState(current => Object.assign(current, {count: isHoliday ? 0 : 1}));
+    };
+    setCount(this.state);
+  };
 
-  let count = 0;
+  render() {
+    const { date, count } = this.state;
 
-  if (isSaturday(date) || isSunday(date)) count = 0;
-  else count = 1;
+    return (
+      <div className="App">
+        <h1>날짜 수 세기</h1>
+        <p data-testid='start_date'>{format(date)}</p>
+        <p data-testid='end_date'>{format(date)}</p>
+        <p data-testid='result'>{count} 일</p>
+      </div>
+    );
+  };
+}
 
-  return (
-    <div className="App">
-      <h1>날짜 수 세기</h1>
-      <p data-testid='start_date'>{dateString(date)}</p>
-      <p data-testid='end_date'>{dateString(date)}</p>
-      <p data-testid='result'>{count} 일</p>
-    </div>
-  );
-};
+export default WeekdayCounter;
