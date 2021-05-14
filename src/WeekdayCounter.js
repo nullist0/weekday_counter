@@ -1,37 +1,104 @@
-function dateString(date) {
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  return `${year}/${month}/${day}`;
-};
+import axios from 'axios';
+import { xml2js } from 'xml-js';
+import React from 'react';
 
-function isSaturday(date) {
-    return date.getDay() === 6;
-};
+const ServiceKey = 'WaaCrB9DoKTrcjXH0w1djKS%2BOpxkxJY1nJ799SzraTyAHiByYdzvy00j3m5sndXjKvkJMQrJwFtPY36LzpEZTg%3D%3D';
 
-function isSunday(date) {
-    return date.getDay() === 0;
-};
+class WeekdayCounter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state.date = props.date;
+  };
 
-export default function WeekdayCounter({
-    date
-}) {
-  // const key = 'WaaCrB9DoKTrcjXH0w1djKS%2BOpxkxJY1nJ799SzraTyAHiByYdzvy00j3m5sndXjKvkJMQrJwFtPY36LzpEZTg%3D%3D';
-  // const year = '2015';
-  // const month = '09';
-  // const url = `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=${key}&solYear=${year}&solMonth=${month}`;
+  state = {
+    date: new Date(),
+    count: 0
+  };
+  
+  getHolidays = async () => {
+    function readDate({locdate: {_text}}) {
+      const year = parseInt(_text.substr(0, 4));
+      const month = parseInt(_text.substr(4, 2));
+      const day = parseInt(_text.substr(6, 2));
+      
+      return new Date(year, month - 1, day);
+    };
 
-  let count = 0;
+    const { date } = this.state;
+    const year = date.getFullYear().toString();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const apiUrl = `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=${ServiceKey}&solYear=${year}&solMonth=${month}`;
+    
+    const { data } = await axios.get(apiUrl);
+    const { response: { body: { items: { item } }} } = xml2js(data, {compact: true});
+    return item.map(readDate);
+  };
 
-  if (isSaturday(date) || isSunday(date)) count = 0;
-  else count = 1;
+  isSaturday = (date) => {
+      return date.getDay() === 6;
+  };
 
-  return (
-    <div className="App">
-      <h1>날짜 수 세기</h1>
-      <p data-testid='start_date'>{dateString(date)}</p>
-      <p data-testid='end_date'>{dateString(date)}</p>
-      <p data-testid='result'>{count} 일</p>
-    </div>
-  );
-};
+  isSunday = (date) => {
+      return date.getDay() === 0;
+  };
+
+  isHoliday = async (date) => {
+    const dates = await this.getHolidays();
+    return date in dates;
+  };
+
+  componentDidMount() {
+    const setCount = async () => {
+      const { date } = this.state;
+  
+      if (this.isSaturday(date) || this.isSunday(date) || await this.isHoliday(date)) {
+        this.setState(current => current.count = 0);
+      } else {
+        this.setState(current => current.count = 1);
+      }
+    };
+    setCount();
+  };
+
+  render() {
+    function dateString(date) {
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      return `${year}/${month}/${day}`;
+    };
+
+    const { date, count } = this.state;
+    
+    return (
+      <div className="App">
+        <h1>날짜 수 세기</h1>
+        <p data-testid='start_date'>{dateString(date)}</p>
+        <p data-testid='end_date'>{dateString(date)}</p>
+        <p data-testid='result'>{count} 일</p>
+      </div>
+    );
+  };
+}
+
+export default WeekdayCounter;
+
+// export default function WeekdayCounter({
+//     date
+// }) {
+//   const year = date.getFullYear().toString();
+//   const month = (date.getMonth() + 1).toString().padStart(2, '0');
+//   const apiUrl = `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=${ServiceKey}&solYear=${year}&solMonth=${month}`;
+
+//   let [count, setCount] = useState(0);
+
+
+//   useEffect(() => {
+//     const process = async () => {
+//       if (isSaturday(date) || isSunday(date)) setCount(0);
+//       else setCount(1);
+//     };
+//     process();
+//   }, [date]);
+
+// };
