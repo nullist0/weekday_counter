@@ -1,35 +1,48 @@
 import React from 'react';
 
-import { format } from './utils/date_formmatter';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+import { DateRange } from 'react-date-range';
+
 import { isWeekday } from './adapter/date_fetcher';
 
 class WeekdayCounter extends React.Component {
   constructor(props) {
     super(props);
-    this.state.date = props.date;
+    this.state.range.startDate = props.date;
+    this.state.range.endDate = props.date;
   };
 
   state = {
-    date: new Date(),
+    range: {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: 'range'
+    },
     count: 0
   };
   
   componentDidMount() {
-    const setCount = async ({ date }) => {
+    const setCount = async ( date ) => {
       const isHoliday = !(await isWeekday(date));
       this.setState(current => Object.assign(current, {count: isHoliday ? 0 : 1}));
     };
-    setCount(this.state);
+    setCount(this.state.range.startDate);
   };
 
   render() {
-    const { date, count } = this.state;
-
+    const { count, range } = this.state;
+    
     return (
       <div className="App">
         <h1>날짜 수 세기</h1>
-        <p data-testid='start_date'>{format(date)}</p>
-        <p data-testid='end_date'>{format(date)}</p>
+        <DateRange
+          editableDateInputs={true}
+          onChange={item => this.setState(current => current.range = item.range)}
+          moveRangeOnFirstSelection={false}
+          ranges={[range]}
+          dateDisplayFormat={'yyyy/MM/dd'}
+        />
         <p data-testid='result'>{count} 일</p>
       </div>
     );
