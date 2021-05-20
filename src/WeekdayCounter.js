@@ -2,6 +2,8 @@ import React from 'react';
 
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
+
+import * as locales from 'react-date-range/dist/locale';
 import { DateRange } from 'react-date-range';
 
 import { isWeekday } from './adapter/date_fetcher';
@@ -37,6 +39,7 @@ class WeekdayCounter extends React.Component {
       <div className="App">
         <h1>날짜 수 세기</h1>
         <DateRange
+          locale={locales['ko']}
           editableDateInputs={true}
           onChange={item => this.setState(current => current.range = item.range)}
           moveRangeOnFirstSelection={false}
