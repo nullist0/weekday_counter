@@ -25,7 +25,7 @@ class WeekdayCounter extends React.Component {
   };
 
   update = async ({ range }) => {
-    const { startDate, endDate } = this.state.range;
+    const { startDate, endDate } = range;
     const count = await countWeekdayInRange(startDate, endDate);
     this.setState({range, count});
   };

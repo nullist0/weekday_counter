@@ -25,10 +25,6 @@ async function getHolidaysIn(date) {
     return items?.map(readDate) ?? [];
 };
 
-// function countAllDayInRange(start, end) {
-//     return differenceInDays(end, start) + 1;
-// };
-
 function* monthsInRange(start, end) {
     let currentMonth = startOfMonth(start);
     const endMonth = startOfMonth(addMonths(end, 1));
@@ -53,14 +49,6 @@ async function countWeekdayInRange(start, end) {
     return nonWeekendCount - holidaysCount;
 };
 
-// async function countWeekdayInRange(start, end) {
-//     const total = countAllDayInRange(start, end);
-//     const notWeekday = await countNonWeekdayInRange(start, end);
-
-//     return total - notWeekday;
-// };
-
 export {
-    // countAllDayInRange,
     countWeekdayInRange
 };
