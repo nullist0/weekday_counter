@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { differenceInDays, parse, differenceInBusinessDays, addDays, format, isWithinInterval, startOfMonth, addMonths, isBefore, isWeekend } from 'date-fns';
 import { xml2js } from 'xml-js';
 
 const ServiceKey = 'WaaCrB9DoKTrcjXH0w1djKS%2BOpxkxJY1nJ799SzraTyAHiByYdzvy00j3m5sndXjKvkJMQrJwFtPY36LzpEZTg%3D%3D';
@@ -11,38 +12,55 @@ function readDate({locdate: {_text}}) {
     return new Date(year, month - 1, day);
 };
 
-async function getHolidays(year, month) {
+async function getHolidaysIn(date) {
     const params = {
-        year: year.toString(),
-        month: month.toString().padStart(2, '0')
+        year: format(date, 'yyyy'),
+        month: format(date, 'MM')
     };
     const apiUrl = `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=${ServiceKey}&solYear=${params.year}&solMonth=${params.month}`;
 
     const { data } = await axios.get(apiUrl);
     const { response: { body: { items: { item } }} } = xml2js(data, {compact: true});
-    return item.map(readDate);
+    const items = Array.isArray(item) ? item : (item ? [item] : undefined);
+    return items?.map(readDate) ?? [];
 };
 
-function isSaturday(date) {
-    return date.getDay() === 6;
-};
+// function countAllDayInRange(start, end) {
+//     return differenceInDays(end, start) + 1;
+// };
 
-function isSunday(date) {
-    return date.getDay() === 0;
-};
-
-async function isHoliday(date) {
-    const dates = await getHolidays(date.getFullYear(), date.getMonth() + 1);
-    return date in dates;
-};
-
-async function isWeekday(date) {
-    return !(isSaturday(date) || isSunday(date) || await isHoliday(date));
+function* monthsInRange(start, end) {
+    let currentMonth = startOfMonth(start);
+    const endMonth = startOfMonth(addMonths(end, 1));
+    while(isBefore(currentMonth, endMonth)) {
+        yield currentMonth;
+        currentMonth = addMonths(currentMonth, 1);
+    }
 }
 
+async function countWeekdayInRange(start, end) {
+    const nextEndDate = addDays(end, 1);
+    const nonWeekendCount = differenceInBusinessDays(nextEndDate, start);
+
+    const months = Array.from(monthsInRange(start, end));
+
+    const holidaysInRange = (await Promise.all(months.map(getHolidaysIn)))
+        .flat()
+        .filter(date => isWithinInterval(date, { start, end }))
+        .filter(date => !isWeekend(date));
+    const holidaysCount = holidaysInRange.length;
+
+    return nonWeekendCount - holidaysCount;
+};
+
+// async function countWeekdayInRange(start, end) {
+//     const total = countAllDayInRange(start, end);
+//     const notWeekday = await countNonWeekdayInRange(start, end);
+
+//     return total - notWeekday;
+// };
+
 export {
-    isSaturday,
-    isSunday,
-    isHoliday, 
-    isWeekday
+    // countAllDayInRange,
+    countWeekdayInRange
 };

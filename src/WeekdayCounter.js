@@ -6,7 +6,7 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 import * as locales from 'react-date-range/dist/locale';
 import { DateRange } from 'react-date-range';
 
-import { isWeekday } from './adapter/date_fetcher';
+import { countWeekdayInRange } from './adapter/date_fetcher';
 
 class WeekdayCounter extends React.Component {
   constructor(props) {
@@ -23,25 +23,23 @@ class WeekdayCounter extends React.Component {
     },
     count: 0
   };
-  
-  componentDidMount() {
-    const setCount = async ( date ) => {
-      const isHoliday = !(await isWeekday(date));
-      this.setState(current => Object.assign(current, {count: isHoliday ? 0 : 1}));
-    };
-    setCount(this.state.range.startDate);
+
+  update = async ({ range }) => {
+    const { startDate, endDate } = this.state.range;
+    const count = await countWeekdayInRange(startDate, endDate);
+    this.setState({range, count});
   };
 
   render() {
     const { count, range } = this.state;
-    
+
     return (
       <div className="App">
         <h1>날짜 수 세기</h1>
         <DateRange
           locale={locales['ko']}
           editableDateInputs={true}
-          onChange={item => this.setState(current => current.range = item.range)}
+          onChange={item => this.update(item)}
           moveRangeOnFirstSelection={false}
           ranges={[range]}
           dateDisplayFormat={'yyyy/MM/dd'}
