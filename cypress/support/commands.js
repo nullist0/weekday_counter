@@ -10,16 +10,16 @@ function runFakeServer() {
     );
 };
 
-function setTime(date) {
-    return cy.clock(date, ['Date']).reload();
-};
+function setDate(date) {
+    return setDateRange(date, date);
+}
 
-function setDateRange(startDate, endDate) {
-    const startDateString = format(startDate, 'yyyy/MM/dd');
-    const endDateString = format(endDate, 'yyyy/MM/dd');
+function setDateRange(start, end) {
+    const startDateString = format(start, 'yyyy/MM/dd');
+    const endDateString = format(end, 'yyyy/MM/dd');
 
     return cy.get('input').eq(0).clear().type(startDateString).type('{enter}')
-        .get('input').eq(1).clear().type(endDateString).type('{enter}');
+             .get('input').eq(1).clear().type(endDateString).type('{enter}');
 };
 
 function hasStartDate(date) {
@@ -41,5 +41,5 @@ Cypress.Commands.add('hasStartDate', hasStartDate);
 Cypress.Commands.add('hasEndDate', hasEndDate);
 
 Cypress.Commands.add('setDateRange', setDateRange);
-Cypress.Commands.add('setTime', setTime);
+Cypress.Commands.add('setDate', setDate);
 Cypress.Commands.add('runServer', runFakeServer);

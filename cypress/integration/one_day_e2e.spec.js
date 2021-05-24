@@ -1,39 +1,36 @@
 /// <reference types="cypress" />
 
-describe('One day end to end tests', () => {
+describe('end to end tests for a day', () => {
     beforeEach(() => {
         cy.runServer();
         cy.visit('/');
     });
 
-    it('show today if dates are not selected', () => {
-        const date = new Date(2021, 4, 13);
-        cy.setTime(date);
-        cy.hasStartDate(date);
-        cy.hasEndDate(date);
-    });
-
-    it('count 1 day if today is a weekday', () => {
+    it('count 1 weekday for a weekday', () => {
         const date = new Date(2015, 8, 1);
-        cy.setTime(date);
+
+        cy.setDate(date);
         cy.hasResult(1);
     });
 
-    it('count 0 day if today is a saturday', () => {
+    it('count 0 weekday for a saturday', () => {
         const date = new Date(2015, 8, 5);
-        cy.setTime(date);
+
+        cy.setDate(date);
         cy.hasResult(0);
     });
 
-    it('count 0 day if today is a sunday', () => {
+    it('count 0 weekday for a sunday', () => {
         const date = new Date(2015, 8, 6);
-        cy.setTime(date);
+
+        cy.setDate(date);
         cy.hasResult(0);
     });
 
-    it('count 0 day if today is a holiday in server', () => {
+    it('count 0 weekday for a holiday in the server', () => {
         const date = new Date(2015, 8, 28);
-        cy.setTime(date);
+
+        cy.setDate(date);
         cy.hasResult(0);
     });
 });
