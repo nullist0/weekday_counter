@@ -1,17 +1,20 @@
 {
   "files": {
-    "main.js": "/weekday_counter/static/js/main.8db82238.chunk.js",
-    "main.js.map": "/weekday_counter/static/js/main.8db82238.chunk.js.map",
+    "main.js": "/weekday_counter/static/js/main.7e7edcb9.chunk.js",
+    "main.js.map": "/weekday_counter/static/js/main.7e7edcb9.chunk.js.map",
     "runtime-main.js": "/weekday_counter/static/js/runtime-main.6219a925.js",
     "runtime-main.js.map": "/weekday_counter/static/js/runtime-main.6219a925.js.map",
-    "static/js/2.969fb2f8.chunk.js": "/weekday_counter/static/js/2.969fb2f8.chunk.js",
-    "static/js/2.969fb2f8.chunk.js.map": "/weekday_counter/static/js/2.969fb2f8.chunk.js.map",
+    "static/css/2.06382735.chunk.css": "/weekday_counter/static/css/2.06382735.chunk.css",
+    "static/js/2.29dc4cb6.chunk.js": "/weekday_counter/static/js/2.29dc4cb6.chunk.js",
+    "static/js/2.29dc4cb6.chunk.js.map": "/weekday_counter/static/js/2.29dc4cb6.chunk.js.map",
     "index.html": "/weekday_counter/index.html",
-    "static/js/2.969fb2f8.chunk.js.LICENSE.txt": "/weekday_counter/static/js/2.969fb2f8.chunk.js.LICENSE.txt"
+    "static/css/2.06382735.chunk.css.map": "/weekday_counter/static/css/2.06382735.chunk.css.map",
+    "static/js/2.29dc4cb6.chunk.js.LICENSE.txt": "/weekday_counter/static/js/2.29dc4cb6.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.6219a925.js",
-    "static/js/2.969fb2f8.chunk.js",
-    "static/js/main.8db82238.chunk.js"
+    "static/css/2.06382735.chunk.css",
+    "static/js/2.29dc4cb6.chunk.js",
+    "static/js/main.7e7edcb9.chunk.js"
   ]
 }
