@@ -21,7 +21,7 @@ async function getHolidaysIn(month) {
 
     const { data } = await axios.get(apiUrl);
     const { response: { body: { items: { item } }} } = xml2js(data, {compact: true});
-    const items = Array.isArray(item) ? item : (item ? [item] : undefined);
+    const items = item ? [item].flat() : undefined;
     return items?.map(readDate) ?? [];
 }
 
