@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/weekday_counter/static/js/main.4d9a845c.chunk.js",
-    "main.js.map": "/weekday_counter/static/js/main.4d9a845c.chunk.js.map",
+    "main.js": "/weekday_counter/static/js/main.a5ec7a37.chunk.js",
+    "main.js.map": "/weekday_counter/static/js/main.a5ec7a37.chunk.js.map",
     "runtime-main.js": "/weekday_counter/static/js/runtime-main.6219a925.js",
     "runtime-main.js.map": "/weekday_counter/static/js/runtime-main.6219a925.js.map",
     "static/css/2.06382735.chunk.css": "/weekday_counter/static/css/2.06382735.chunk.css",
@@ -15,6 +15,6 @@
     "static/js/runtime-main.6219a925.js",
     "static/css/2.06382735.chunk.css",
     "static/js/2.313c425f.chunk.js",
-    "static/js/main.4d9a845c.chunk.js"
+    "static/js/main.a5ec7a37.chunk.js"
   ]
 }
