@@ -2,11 +2,11 @@
 
 import { format } from 'date-fns';
 
-function runFakeServer() {
+function runFakeServer(dates) {
     return cy.intercept(
         'GET', 
-        'http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/*',
-        { fixture: 'dates.xml' }
+        'https://shielded-forest-67184.herokuapp.com/*',
+        { body: { dates } }
     );
 };
 

@@ -2,7 +2,7 @@
 
 describe('end to end tests for a range of days', () => {
     beforeEach(() => {
-        cy.runServer();
+        cy.runServer([]);
         cy.visit('/');
     });
 

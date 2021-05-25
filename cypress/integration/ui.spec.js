@@ -2,7 +2,7 @@
 
 describe('test whether ui elements are working', () => {
     beforeEach(() => {
-        cy.runServer();
+        cy.runServer([]);
         cy.visit('/');
     });
 
