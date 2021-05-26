@@ -14,7 +14,7 @@ function CountResult({ counter, range }) {
       setCount(cache);
     };
     handleRange();
-  }, [range]);
+  }, [counter, range]);
   
   return (
     <p data-testid='result'>{count} 일</p>
