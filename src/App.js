@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import * as locales from 'react-date-range/dist/locale';
@@ -8,8 +8,14 @@ import Range from './domain/range';
 function CountResult({ counter, range }) {
   const [count, setCount] = useState(0);
   
-  counter.countWeekdayInRange(range).then(setCount);
-
+  useEffect(() => {
+    const handleRange = async () => {
+      const cache = await counter.countWeekdayInRange(range);
+      setCount(cache);
+    };
+    handleRange();
+  }, [range]);
+  
   return (
     <p data-testid='result'>{count} 일</p>
   );
