@@ -16,6 +16,7 @@ async function getHolidaysIn(month) {
     };
     const apiUrl = `https://shielded-forest-67184.herokuapp.com/holidays?year=${params.year}&month=${params.month}`;
     const { data: { dates } } = await axios.get(apiUrl);
+    
     return dates.map(readDate);
 }
 

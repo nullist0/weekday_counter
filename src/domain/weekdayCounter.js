@@ -15,6 +15,7 @@ function* monthsInRange(range) {
 function countAllNonWeekendIn(range) {
     const {start, end} = range;
     const nextEndDate = addDays(end, 1);
+    
     return differenceInBusinessDays(nextEndDate, start);
 }
 

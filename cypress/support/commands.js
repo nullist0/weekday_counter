@@ -24,11 +24,13 @@ function setDateRange(start, end) {
 
 function hasStartDate(date) {
     const str = format(date, 'yyyy/MM/dd');
+
     return cy.get('input').eq(0).should('have.value', str);
 };
 
 function hasEndDate(date) {
     const str = format(date, 'yyyy/MM/dd');
+
     return cy.get('input').eq(1).should('have.value', str);
 };
 
