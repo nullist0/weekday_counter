@@ -4,6 +4,7 @@ describe('test whether ui elements are working', () => {
     beforeEach(() => {
         cy.runServer([]);
         cy.visit('/');
+        cy.waitServer();
     });
 
     it('show today if the range is not selected', () => {

@@ -6,6 +6,7 @@ describe('end to end tests for a day', () => {
     beforeEach(() => {
         cy.runServer(holidays);
         cy.visit('/');
+        cy.waitServer();
     });
 
     it('count 1 weekday for a weekday', () => {
