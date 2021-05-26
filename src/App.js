@@ -1,69 +1,59 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import * as locales from 'react-date-range/dist/locale';
 import { DateRange } from 'react-date-range';
 import Range from './domain/range';
 
-function CountResult({ counter, range }) {
-  const [count, setCount] = useState(0);
-  
-  useEffect(() => {
-    const handleRange = async () => {
-      const cache = await counter.countWeekdayInRange(range);
-      setCount(cache);
-    };
-    handleRange();
-  }, [counter, range]);
-  
+function CountResult({ count }) {
   return (
     <p data-testid='result'>{count} 일</p>
   );
 }
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.counter = props.counter;
-  }
-
-  state = {
+function DateRangePicker({ onChangeRange }) {
+  const [dateRange, setRange] = useState({
     startDate: new Date(),
     endDate: new Date(),
-    key: 'range'
-  }
+    key: 'dateRange'
+  });
+  const handleChangeDateRange = ({ dateRange }) => {
+    const range = new Range(dateRange.startDate, dateRange.endDate);
 
-  toRange = (state) => {
-    const { startDate, endDate } = state;
+    setRange(dateRange);
+    onChangeRange(range);
+  };
 
-    return new Range(startDate, endDate);
-  }
+  return (
+    <DateRange
+      locale={locales['ko']}
+      editableDateInputs={true}
+      onChange={item => handleChangeDateRange(item)}
+      
+      ranges={[dateRange]}
+      dateDisplayFormat={'yyyy/MM/dd'}
+    />
+  );
+}
 
-  update = ({ range }) => {
-    this.setState(range);
-  }
+function App({ counter }) {
+  const [count, setCount] = useState(0);
+  const handleChangeRange = async (range) => {
+    const newCount = await counter.countWeekdayInRange(range);
+    setCount(newCount);
+  };
 
-  render() {
-    const range = this.state;
-
-    return (
-      <div className="App">
-        <h1>날짜 수 세기</h1>
-        <DateRange
-          locale={locales['ko']}
-          editableDateInputs={true}
-          onChange={item => this.update(item)}
-          moveRangeOnFirstSelection={false}
-          ranges={[range]}
-          dateDisplayFormat={'yyyy/MM/dd'}
-        />
-        <CountResult
-          counter={this.counter}
-          range={this.toRange(range)} 
-        />
-      </div>
-    );
-  }
+  return (
+    <div className="App">
+      <h1>날짜 수 세기</h1>
+      <DateRangePicker 
+        onChangeRange={handleChangeRange}
+      />
+      <CountResult
+        count={count}
+      />
+    </div>
+  );
 }
 
 export default App;

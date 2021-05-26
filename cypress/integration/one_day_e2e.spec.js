@@ -1,12 +1,11 @@
-/// <reference types="cypress" />
+/// <reference types='cypress' />
 
-const holidays = ["20210801"];
+const holidays = ['20210801'];
 
 describe('end to end tests for a day', () => {
     beforeEach(() => {
         cy.runServer(holidays);
         cy.visit('/');
-        cy.waitServer();
     });
 
     it('count 1 weekday for a weekday', () => {

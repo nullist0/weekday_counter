@@ -1,10 +1,9 @@
-/// <reference types="cypress" />
+/// <reference types='cypress' />
 
 describe('end to end tests for a range of days', () => {
     beforeEach(() => {
         cy.runServer([]);
         cy.visit('/');
-        cy.waitServer();
     });
 
     it('count 5 weekdays for a week in a month.', () => {
