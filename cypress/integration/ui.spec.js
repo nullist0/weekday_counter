@@ -1,10 +1,9 @@
-/// <reference types="cypress" />
+/// <reference types='cypress' />
 
 describe('test whether ui elements are working', () => {
     beforeEach(() => {
         cy.runServer([]);
         cy.visit('/');
-        cy.waitServer();
     });
 
     it('show today if the range is not selected', () => {

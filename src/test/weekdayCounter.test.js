@@ -4,7 +4,7 @@ import WeekdayCounter from '../domain/weekdayCounter';
 describe('count weekday in a range', () => {
     const fakeHolidayDataSource = (dates) => {
         return {
-            getHolidaysIn: () => dates
+            getHolidaysInRange: () => dates
         }
     };
 

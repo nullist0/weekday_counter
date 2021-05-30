@@ -1,69 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import 'react-date-range/dist/styles.css';
-import 'react-date-range/dist/theme/default.css';
-import * as locales from 'react-date-range/dist/locale';
-import { DateRange } from 'react-date-range';
-import Range from './domain/range';
+import React, { useState } from 'react';
+import { DateRangePicker } from './components/DateRangePicker';
+import { CountResult } from './components/CountResult';
 
-function CountResult({ counter, range }) {
+function App({ counter }) {
   const [count, setCount] = useState(0);
-  
-  useEffect(() => {
-    const handleRange = async () => {
-      const cache = await counter.countWeekdayInRange(range);
-      setCount(cache);
-    };
-    handleRange();
-  }, [counter, range]);
-  
+  const handleChangeRange = (range) => {
+    counter.countWeekdayInRange(range).then(setCount);
+  };
+
   return (
-    <p data-testid='result'>{count} 일</p>
+    <div className="App">
+      <h1>날짜 수 세기</h1>
+      <DateRangePicker 
+        onChangeRange={handleChangeRange}
+      />
+      <CountResult
+        count={count}
+      />
+    </div>
   );
-}
-
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.counter = props.counter;
-  }
-
-  state = {
-    startDate: new Date(),
-    endDate: new Date(),
-    key: 'range'
-  }
-
-  toRange = (state) => {
-    const { startDate, endDate } = state;
-
-    return new Range(startDate, endDate);
-  }
-
-  update = ({ range }) => {
-    this.setState(range);
-  }
-
-  render() {
-    const range = this.state;
-
-    return (
-      <div className="App">
-        <h1>날짜 수 세기</h1>
-        <DateRange
-          locale={locales['ko']}
-          editableDateInputs={true}
-          onChange={item => this.update(item)}
-          moveRangeOnFirstSelection={false}
-          ranges={[range]}
-          dateDisplayFormat={'yyyy/MM/dd'}
-        />
-        <CountResult
-          counter={this.counter}
-          range={this.toRange(range)} 
-        />
-      </div>
-    );
-  }
 }
 
 export default App;

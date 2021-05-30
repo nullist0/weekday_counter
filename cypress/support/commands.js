@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+/// <reference types='cypress' />
 
 import { format } from 'date-fns';
 
@@ -50,5 +50,4 @@ Cypress.Commands.add('setDateRange', setDateRange);
 Cypress.Commands.add('setDate', setDate);
 
 Cypress.Commands.add('runServer', runFakeServer);
-
 Cypress.Commands.add('waitServer', waitFakeServer);

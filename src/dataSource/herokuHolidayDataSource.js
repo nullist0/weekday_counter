@@ -1,5 +1,10 @@
 import axios from 'axios';
-import { format } from 'date-fns';
+import { isBefore } from 'date-fns';
+import addMonths from 'date-fns/addMonths';
+import isWeekend from 'date-fns/isWeekend';
+import isWithinInterval from 'date-fns/isWithinInterval';
+import startOfMonth from 'date-fns/startOfMonth';
+import Month from './month';
 
 function readDate(dateString) {
     const year = parseInt(dateString.substr(0, 4));
@@ -9,17 +14,40 @@ function readDate(dateString) {
     return new Date(year, month - 1, day);
 }
 
-async function getHolidaysIn(month) {
-    const params = {
-        year: format(month, 'yyyy'),
-        month: format(month, 'MM')
-    };
-    const apiUrl = `https://shielded-forest-67184.herokuapp.com/holidays?year=${params.year}&month=${params.month}`;
-    const { data: { dates } } = await axios.get(apiUrl);
+const cache = {};
+
+async function getHolidaysInMonth({ year, month }) {
+    const apiUrl = `https://shielded-forest-67184.herokuapp.com/holidays?year=${year}&month=${month}`;
+
+    if (cache[apiUrl] === undefined) {
+        const { data: { dates } } = await axios.get(apiUrl);
+        const holidays = dates.map(readDate);
+        
+        cache[apiUrl] = holidays;
+    }
+    return cache[apiUrl];
+}
+
+function* monthsInRange(range) {
+    const {start, end} = range;
+    const endMonth = startOfMonth(addMonths(end, 1));
+    let currentMonth = startOfMonth(start);
+
+    while(isBefore(currentMonth, endMonth)) {
+        yield new Month(currentMonth);
+        currentMonth = addMonths(currentMonth, 1);
+    }
+}
+
+async function getHolidaysInRange(range) {
+    const months = Array.from(monthsInRange(range));
     
-    return dates.map(readDate);
+    return (await Promise.all(months.map(getHolidaysInMonth)))
+        .flat()
+        .filter(date => isWithinInterval(date, range))
+        .filter(date => !isWeekend(date));
 }
 
 export {
-    getHolidaysIn
+    getHolidaysInRange
 }
