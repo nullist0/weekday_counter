@@ -25,6 +25,7 @@ export function DateRangePicker({ onChangeRange }) {
       editableDateInputs={true}
       onChange={item => handleChangeDateRange(item)}
       ranges={[dateRange]}
-      dateDisplayFormat={'yyyy/MM/dd'} />
+      dateDisplayFormat={'yyyy/MM/dd'} 
+    />
   );
 }

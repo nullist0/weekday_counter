@@ -22,6 +22,7 @@ async function getHolidaysInMonth({ year, month }) {
     if (cache[apiUrl] === undefined) {
         const { data: { dates } } = await axios.get(apiUrl);
         const holidays = dates.map(readDate);
+        
         cache[apiUrl] = holidays;
     }
     return cache[apiUrl];
