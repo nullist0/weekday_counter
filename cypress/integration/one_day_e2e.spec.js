@@ -1,6 +1,8 @@
 /// <reference types='cypress' />
 
-const holidays = ['20210801'];
+import Holiday from "../../src/api/holiday";
+
+const holidays = [new Holiday(2021, 8, 1)];
 
 describe('end to end tests for a day', () => {
     beforeEach(() => {

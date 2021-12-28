@@ -2,11 +2,11 @@
 
 import { format } from 'date-fns';
 
-function runFakeServer(dates) {
+function runFakeServer(holidays) {
     return cy.intercept(
         'GET', 
-        'https://shielded-forest-67184.herokuapp.com/*',
-        { body: { dates } }
+        'https://shielded-forest-67184.herokuapp.com/holidays/*/*',
+        { body: { holidays } }
     ).as('fakeServer');
 }
 
